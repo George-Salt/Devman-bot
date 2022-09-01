@@ -6,16 +6,14 @@ from dotenv import load_dotenv
 
 
 def send_notification(check):
+    title = check["lesson_title"]
+    link = check["lesson_url"]
     if check["is_negative"]:
-        title = check["lesson_title"]
-        link = check["lesson_url"]
         bot.send_message(
             chat_id=chat_id,
             text=f"Преподаватель проверил урок `{title}`.\n\nВ работе нашлись ошибки.\nСсылка на урок - {link}."
         )
     else:
-        title = check["lesson_title"]
-        link = check["lesson_url"]
         bot.send_message(
             chat_id=chat_id,
             text=f"""Преподаватель проверил урок `{title}`.\n\nПреподавателю все понравилось. Можно приступать к следующему уроку.\nСсылка на урок - {link}."""
