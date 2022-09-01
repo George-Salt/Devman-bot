@@ -38,12 +38,16 @@ if __name__ == "__main__":
 
     while True:
         try:
-            response = requests.get(url, headers=authorization, timeout=10, params=params)
+            response = requests.get(url, headers=authorization, timeout=95, params=params)
             response.raise_for_status()
+
+            params = response.json()["last_attempt_timestamp"]
         except requests.exceptions.ReadTimeout:
             continue
         except requests.exceptions.ConnectionError:
             continue
         
+        if not response["status"] == "found":
+            continue
         for check in response.json()["new_attempts"]:
             send_notification(check)
