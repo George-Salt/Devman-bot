@@ -9,15 +9,14 @@ def send_notification(check):
     title = check["lesson_title"]
     link = check["lesson_url"]
     if check["is_negative"]:
-        bot.send_message(
-            chat_id=chat_id,
-            text=f"Преподаватель проверил урок `{title}`.\n\nВ работе нашлись ошибки.\nСсылка на урок - {link}."
-        )
+        text=f"Преподаватель проверил урок `{title}`.\n\nВ работе нашлись ошибки.\nСсылка на урок - {link}."
     else:
-        bot.send_message(
-            chat_id=chat_id,
-            text=f"""Преподаватель проверил урок `{title}`.\n\nПреподавателю все понравилось. Можно приступать к следующему уроку.\nСсылка на урок - {link}."""
-        )
+        text=f"""Преподаватель проверил урок `{title}`.\n\nПреподавателю все понравилось. Можно приступать к следующему уроку.\nСсылка на урок - {link}."""
+    
+    bot.send_message(
+        chat_id=chat_id,
+        text=text
+    )
     return "Уведомление отправлено!"
 
 
@@ -41,13 +40,16 @@ if __name__ == "__main__":
             response = requests.get(url, headers=authorization, timeout=95, params=params)
             response.raise_for_status()
 
-            params = response.json()["last_attempt_timestamp"]
         except requests.exceptions.ReadTimeout:
+            params = {"timestamp": response.json()["timestamp_to_request"]}
             continue
+
         except requests.exceptions.ConnectionError:
             continue
-        
-        if not response["status"] == "found":
+
+        if not response.json():
+            continue
+        if not response.json()["status"] == "found":
             continue
         for check in response.json()["new_attempts"]:
-            send_notification(check)
+            print(send_notification(check))
