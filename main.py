@@ -47,7 +47,7 @@ if __name__ == "__main__":
         except requests.exceptions.ConnectionError:
             continue
 
-        if not response.json():
+        if not response.json()["status"]:
             continue
         if not response.json()["status"] == "found":
             continue
