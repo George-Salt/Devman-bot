@@ -40,18 +40,20 @@ if __name__ == "__main__":
         try:
             response = requests.get(url, headers=authorization, timeout=95, params=params)
             response.raise_for_status()
+            json_answer = response.json()
 
         except requests.exceptions.ReadTimeout:
-            params = {"timestamp": response.json()["timestamp_to_request"]}
+            params = {"timestamp": json_answer["timestamp_to_request"]}
             continue
 
         except requests.exceptions.ConnectionError:
             time.sleep(5)
             continue
 
-        if not response.json()["status"]:
+        if not json_answer["status"]:
             continue
-        if not response.json()["status"] == "found":
+        if not json_answer["status"] == "found":
             continue
-        for check in response.json()["new_attempts"]:
+
+        for check in json_answer["new_attempts"]:
             print(send_notification(check))
