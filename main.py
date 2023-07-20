@@ -55,5 +55,6 @@ if __name__ == "__main__":
         if not json_answer["status"] == "found":
             continue
 
+        params = {"timestamp": json_answer["last_attempt_timestamp"]}
         for check in json_answer["new_attempts"]:
             print(send_notification(check))
