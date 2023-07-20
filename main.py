@@ -14,11 +14,7 @@ def send_notification(check):
     else:
         text=f"""Преподаватель проверил урок `{title}`.\n\nПреподавателю все понравилось. Можно приступать к следующему уроку.\nСсылка на урок - {link}."""
     
-    bot.send_message(
-        chat_id=chat_id,
-        text=text
-    )
-    return "Уведомление отправлено!"
+    bot.send_message(chat_id, text)
 
 
 if __name__ == "__main__":
@@ -51,11 +47,9 @@ if __name__ == "__main__":
             time.sleep(5)
             continue
 
-        if not json_answer["status"]:
-            continue
         if not json_answer["status"] == "found":
             continue
 
         params = {"timestamp": json_answer["last_attempt_timestamp"]}
         for check in json_answer["new_attempts"]:
-            print(send_notification(check))
+            send_notification(check)
