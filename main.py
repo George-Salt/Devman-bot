@@ -42,8 +42,9 @@ if __name__ == "__main__":
             response.raise_for_status()
             json_answer = response.json()
 
-        except requests.exceptions.ReadTimeout:
             params = {"timestamp": json_answer["timestamp_to_request"]}
+
+        except requests.exceptions.ReadTimeout:
             continue
 
         except requests.exceptions.ConnectionError:
