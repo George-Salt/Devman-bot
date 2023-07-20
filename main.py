@@ -1,4 +1,5 @@
 import os
+import time
 
 import requests
 import telegram
@@ -45,6 +46,7 @@ if __name__ == "__main__":
             continue
 
         except requests.exceptions.ConnectionError:
+            time.sleep(5)
             continue
 
         if not response.json()["status"]:
