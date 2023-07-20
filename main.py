@@ -36,7 +36,7 @@ if __name__ == "__main__":
         try:
             response = requests.get(url, headers=authorization, timeout=95, params=params)
             response.raise_for_status()
-            json_answer = response.json()
+            review = response.json()
 
         except requests.exceptions.ReadTimeout:
             continue
@@ -45,11 +45,11 @@ if __name__ == "__main__":
             time.sleep(5)
             continue
 
-        if json_answer["status"] == "timeout":
-            params = {"timestamp": json_answer["timestamp_to_request"]}
-        if not json_answer["status"] == "found":
+        if review["status"] == "timeout":
+            params = {"timestamp": review["timestamp_to_request"]}
+        if not review["status"] == "found":
             continue
 
-        params = {"timestamp": json_answer["last_attempt_timestamp"]}
-        for check in json_answer["new_attempts"]:
+        params = {"timestamp": review["last_attempt_timestamp"]}
+        for check in review["new_attempts"]:
             send_notification(check)
