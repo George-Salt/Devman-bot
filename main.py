@@ -38,8 +38,6 @@ if __name__ == "__main__":
             response.raise_for_status()
             json_answer = response.json()
 
-            params = {"timestamp": json_answer["timestamp_to_request"]}
-
         except requests.exceptions.ReadTimeout:
             continue
 
@@ -47,6 +45,8 @@ if __name__ == "__main__":
             time.sleep(5)
             continue
 
+        if json_answer["status"] == "timeout":
+            params = {"timestamp": json_answer["timestamp_to_request"]}
         if not json_answer["status"] == "found":
             continue
 
